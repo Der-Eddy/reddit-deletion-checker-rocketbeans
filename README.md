@@ -42,6 +42,11 @@ In other words, if you see something being reported as deleted and it's not on /
 
 This issue is somewhat amplified in the longtail mode of this script (simply because it's checking 10x the pages).
 
+Credits
+-----
+
+The most of this code was developed by [ozys](https://github.com/ozys/reddit-deletion-checker)  
+Thank you for that!
 
 License
 -------
