@@ -6,15 +6,18 @@ import praw
 import os
 from prawoauth2 import PrawOAuth2Mini
 from tokens import app_key, app_secret, access_token, refresh_token
+#create a tokens.py with that 4 variables
 from datetime import datetime
 
 # Whoever is running the bot, put your reddit username here.
 # This is important for following the API rules.
 # More info here: https://github.com/reddit/reddit/wiki/API
-bot_operator = "EddyBot"
+bot_operator = "dereddy"
+subreddit = "rocketbeans/new"
+submit_subreddit = "undelete_rbtv"
 longtail = False # "True" if you want to watch the top 1000 instead of the top 100.
 
-r = praw.Reddit(user_agent="linux:undelete_rbtv:v1.0 (by /u/dereddy)")
+r = praw.Reddit(user_agent="linux:undelete_rbtv:v1.0 (by /u/" + bot_operator + ")")
 scopes = ['submit', 'identity', 'flair', 'modflair', 'modconfig']
 oauth_helper = PrawOAuth2Mini(r, app_key=app_key, app_secret=app_secret, access_token=access_token, scopes=scopes, refresh_token=refresh_token)
 
@@ -116,8 +119,6 @@ if __name__ == "__main__":
     if bot_operator == "":
         print("Please set the \"bot_operator\" variable as your username at the top of the script.")
     else:
-        subreddit = "rocketbeans/new"
-
         conn = sqlite3.connect('watched.sqlite')
         c = conn.cursor()
         set_up_database(c)
@@ -161,7 +162,7 @@ if __name__ == "__main__":
                         title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "][" + str(prev[9]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
                     else:
                         title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
-                    r.submit("undelete_rbtv", title, url=prev[8], resubmit=True)
+                    r.submit(submit_subreddit, title, url=prev[8], resubmit=True)
             print("Done with /r/" + subreddit)
             print("")
 
