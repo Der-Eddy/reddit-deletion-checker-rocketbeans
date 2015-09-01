@@ -2,13 +2,21 @@ import urllib.request
 import sqlite3
 import json
 import time
+import praw
+import os
+from prawoauth2 import PrawOAuth2Mini
+from tokens import app_key, app_secret, access_token, refresh_token
 from datetime import datetime
 
 # Whoever is running the bot, put your reddit username here.
 # This is important for following the API rules.
 # More info here: https://github.com/reddit/reddit/wiki/API
-bot_operator = ""
+bot_operator = "EddyBot"
 longtail = False # "True" if you want to watch the top 1000 instead of the top 100.
+
+r = praw.Reddit(user_agent="linux:undelete_rbtv:v1.0 (by /u/dereddy)")
+scopes = ['submit', 'identity', 'flair', 'modflair', 'modconfig']
+oauth_helper = PrawOAuth2Mini(r, app_key=app_key, app_secret=app_secret, access_token=access_token, scopes=scopes, refresh_token=refresh_token)
 
 def get_json(url):
     while True:
@@ -108,7 +116,7 @@ if __name__ == "__main__":
     if bot_operator == "":
         print("Please set the \"bot_operator\" variable as your username at the top of the script.")
     else:
-        subreddit = "all"
+        subreddit = "rocketbeans/new"
 
         conn = sqlite3.connect('watched.sqlite')
         c = conn.cursor()
@@ -121,10 +129,11 @@ if __name__ == "__main__":
             add_to_watched(conn, c, post)
 
         print("")
-        print("Sleeping for 5 minutes.")
+        print("Sleeping for 3 minutes.")
         # Wait 5 minutes; nothing is likely to change in this time.
         # Please don't change this to anything lower.
-        time.sleep(5*60)
+        time.sleep(3*60)
+        oauth_helper.refresh()
 
         # Now, we can check if any posts have been deleted (in a loop).
         while True:
@@ -148,6 +157,11 @@ if __name__ == "__main__":
                     print("    " + prev[8])
                     print("    Deleted sometime around " + prev[11])
                     print("")
+                    if prev[9] is not None or "":
+                        title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "][" + str(prev[9]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
+                    else:
+                        title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
+                    r.submit("undelete_rbtv", title, url=prev[8], resubmit=True)
             print("Done with /r/" + subreddit)
             print("")
 
@@ -160,7 +174,9 @@ if __name__ == "__main__":
             for post in posts[0:number_to_watch]:
                 add_to_watched(conn, c, post)
 
-            print("Sleeping for 5 minutes.")
+            print("Sleeping for 3 minutes.")
             # Wait 5 minutes; nothing is likely to change in this time.
             # Please don't change this to anything lower.
-            time.sleep(5*60)
+            time.sleep(3*60)
+            oauth_helper.refresh()
+
