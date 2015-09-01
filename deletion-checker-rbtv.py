@@ -162,7 +162,8 @@ if __name__ == "__main__":
                         title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "][" + str(prev[9]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
                     else:
                         title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
-                    r.submit(submit_subreddit, title, url=prev[8], resubmit=True)
+                    uri = str(prev[8]).replace("www.reddit.com", "np.reddit.com")
+                    r.submit(submit_subreddit, title, url=uri, resubmit=True)
             print("Done with /r/" + subreddit)
             print("")
 
