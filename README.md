@@ -1,4 +1,4 @@
-reddit-deletion-checker
+reddit-deletion-checker-rbtv
 =======================
 
 This is an open-source /r/undelete clone written in Python **3**.
@@ -8,15 +8,28 @@ Requirements
 
  - **You must be running Python 3.**
  - **You must put your username in the "bot_operator" variable at the top of the script.**
+ - **You must add your OAuth Codes in a new file called "tokens.py"**
 
-In Linux (and Mac OS X?), you can run the code with `python3 deletion-checker.py`.
+In Linux (and Mac OS X?), you can run the code with `python3 deletion-checker-rbtv.py`.
 
 In Windows, open the script up in the Python **3** version of IDLE, and press F5. Or, run it from the command line as above.
+
+You will also need some pip packages:  
+
+    pip install praw
+    pip install prawoauth2
+
+The tokens.py should look like this:
+
+    app_key = "YOUR APP KEY"
+    app_secret = "YOUR APP SECRET"
+    access_token = "YOUR OAUTH ACCESS TOKEN"
+    refresh_token = "YOUR OAUTH REFRESH TOKEN"
 
 Notes
 -----
 
- - This script does not post anything to any subreddit. It simply shows posts that have been deleted in your terminal (python output). It should be pretty easy to implement this feature if you're familiar with python. PRAW might be of use here.
+ - This script displays all deletions and post it into another subreddit like /r/undelete.
  - This has only been tested very shortly and only in my linux installation. It's probably nowhere near perfect. **(see the "known issues")**
  - I used a sqlite database, but that's probably not even necessary. Oh well. Someone else can make it more efficient.
 
