@@ -12,12 +12,15 @@ from datetime import datetime
 # Whoever is running the bot, put your reddit username here.
 # This is important for following the API rules.
 # More info here: https://github.com/reddit/reddit/wiki/API
-bot_operator = "dereddy"
-subreddit = "rocketbeans/new"
+bot_operator = "der-eddy"
+#subreddit = "rocketbeans+rocketbeanscirclejerk"
+#subreddit = "rocketbeans/new"
+subreddit = "user/EddyBot/m/rbtv/new"
+#subreddit = ["rocketbeans/new", "rocketbeanscirclejerk/new"]
 submit_subreddit = "undelete_rbtv"
 longtail = False # "True" if you want to watch the top 1000 instead of the top 100.
 
-r = praw.Reddit(user_agent="linux:undelete_rbtv:v1.0 (by /u/" + bot_operator + ")")
+r = praw.Reddit(user_agent="linux:undelete_rbtv:v1.1 (by /u/" + bot_operator + ")")
 scopes = ['submit', 'identity', 'flair', 'modflair', 'modconfig']
 oauth_helper = PrawOAuth2Mini(r, app_key=app_key, app_secret=app_secret, access_token=access_token, scopes=scopes, refresh_token=refresh_token)
 
@@ -39,7 +42,8 @@ def get_json(url):
 def get_posts(subreddit):
     global longtail
     posts = []
-    url = "http://reddit.com/r/" + subreddit + "/.json?limit=100"
+    #url = "https://reddit.com/r/" + subreddit + "/.json?limit=100"
+    url = "https://reddit.com/" + subreddit + "/.json?limit=100"
     now = datetime.now()
     json_data = get_json(url)
     counter = 1
@@ -68,7 +72,8 @@ def get_posts(subreddit):
     if longtail:
         pages = 14
     for x in range(pages):
-        url = "http://reddit.com/r/" + subreddit + "/.json?limit=100&after=" + after
+        #url = "https://reddit.com/r/" + subreddit + "/.json?limit=100&after=" + after
+        url = "https://reddit.com/" + subreddit + "/.json?limit=100&after=" + after
         json_data = get_json(url)
         for post in json_data["data"]["children"]:
             post_dict = {
@@ -159,11 +164,11 @@ if __name__ == "__main__":
                     print("    Deleted sometime around " + prev[11])
                     print("")
                     if prev[9] is not None or "":
-                        title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "][" + str(prev[9]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
+                        title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "][" + str(prev[9]) + "] " + str(prev[4]) + " by /u/" + str(prev[5] + " [/r/" + str(prev[2]) + "]")
                     else:
-                        title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "] " + str(prev[4]) + " by /u/" + str(prev[5])
-                    uri = str(prev[8]).replace("www.reddit.com", "np.reddit.com")
-                    r.submit(submit_subreddit, title, url=uri, resubmit=True)
+                        title = "[#" + str(prev[3]) + "|+" + str(prev[6]) + "|" + str(prev[10]) + "] " + str(prev[4]) + " by /u/" + str(prev[5] + " [/r/" + str(prev[2]) + "]")
+                    uri = str(prev[8])
+                    r.submit(submit_subreddit, title, url=uri.replace("www.reddit.com", "np.reddit.com"), resubmit=True)
             print("Done with /r/" + subreddit)
             print("")
 
