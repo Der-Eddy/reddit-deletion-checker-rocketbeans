@@ -9,12 +9,13 @@ Requirements
 -------------
 
  - Python 3.3 or higher
- - [Praw](https://github.com/praw-dev/praw)
+ - [Praw 4](https://github.com/praw-dev/praw)
 
 
 Configuration
 -------------
 Copy `tokens.example.py` to `tokens.py` and edit all 4 variables:
+
     appKey = 'YourAppKey'
     appSecret = 'YourAppSecret'
     username = 'YourBotUsername'
