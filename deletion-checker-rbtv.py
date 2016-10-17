@@ -4,29 +4,26 @@ import json
 import time
 import praw
 import os
-from prawoauth2 import PrawOAuth2Mini
-from tokens import app_key, app_secret, access_token, refresh_token
-#create a tokens.py with that 4 variables
+import platform
+from tokens import appKey, appSecret, username, password
 from datetime import datetime
 
 # Whoever is running the bot, put your reddit username here.
 # This is important for following the API rules.
 # More info here: https://github.com/reddit/reddit/wiki/API
-bot_operator = "der-eddy"
-#subreddit = "rocketbeans+rocketbeanscirclejerk"
-#subreddit = "rocketbeans/new"
-subreddit = "user/EddyBot/m/rbtv/new"
-#subreddit = ["rocketbeans/new", "rocketbeanscirclejerk/new"]
+bot_operator = 'der-eddy'
+version = 'v1.2'
+system = platform.system()
 submit_subreddit = "undelete_rbtv"
-longtail = False # "True" if you want to watch the top 1000 instead of the top 100.
+userAgent = '{}:undelete_rbtv:{} (by /u/{})'.format(system.lower(), version, bot_operator)
+r = praw.Reddit(client_id = appKey, client_secret = appSecret, user_agent=userAgent, username=username, password=password)
 
-r = praw.Reddit(user_agent="linux:undelete_rbtv:v1.1 (by /u/" + bot_operator + ")")
-scopes = ['submit', 'identity', 'flair', 'modflair', 'modconfig']
-oauth_helper = PrawOAuth2Mini(r, app_key=app_key, app_secret=app_secret, access_token=access_token, scopes=scopes, refresh_token=refresh_token)
+subredditsList = ['rocketbeans', 'rocketbeanscirclejerk']
+subreddit = '+'.join(subredditsList)
 
 def get_json(url):
     while True:
-        header_dictionary = {"User-agent": "Post deletion checker v0.2 operated by /u/" + bot_operator}
+        header_dictionary = {"User-agent": userAgent}
         try:
             url_handle = urllib.request.urlopen(urllib.request.Request(url, headers=header_dictionary))
             url_data = url_handle.read()
@@ -144,7 +141,7 @@ if __name__ == "__main__":
         # Now, we can check if any posts have been deleted (in a loop).
         while True:
             print("")
-            
+
             c.execute('''SELECT * FROM watched''')
             print("Checking /r/" + subreddit + "")
             previous_posts = c.fetchall()
@@ -185,5 +182,3 @@ if __name__ == "__main__":
             # Wait 5 minutes; nothing is likely to change in this time.
             # Please don't change this to anything lower.
             time.sleep(3*60)
-            oauth_helper.refresh()
-

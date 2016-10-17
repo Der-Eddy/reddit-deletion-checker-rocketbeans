@@ -58,4 +58,4 @@ target/
 
 
 tokens.py
-watched.sqlite
+watched.sqlite*
